@@ -4,7 +4,11 @@ const defaultEmailSubject = "Consulta sobre tarjeta física NFC";
 const defaultEmailMessage =
   "Hola, me interesa una tarjeta física NFC personalizada. Quiero recibir más información.";
 
-function buildEmailUrl(message, subject = defaultEmailSubject) {
+function buildMailtoUrl(message, subject = defaultEmailSubject) {
+  return `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+}
+
+function buildGmailUrl(message, subject = defaultEmailSubject) {
   const params = [
     "fs=1",
     "tf=cm",
@@ -16,6 +20,14 @@ function buildEmailUrl(message, subject = defaultEmailSubject) {
   ].join("&");
 
   return `https://mail.google.com/mail/u/0/?${params}`;
+}
+
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+}
+
+function buildEmailUrl(message, subject = defaultEmailSubject) {
+  return isMobileDevice() ? buildMailtoUrl(message, subject) : buildGmailUrl(message, subject);
 }
 
 document.querySelectorAll(".email-link").forEach((link) => {
@@ -341,7 +353,11 @@ if (form) {
     finalPreview?.classList.add("is-final");
 
     finalPreview?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.open(emailUrl, "_blank", "noopener,noreferrer");
+    if (isMobileDevice()) {
+      window.location.href = emailUrl;
+    } else {
+      window.open(emailUrl, "_blank", "noopener,noreferrer");
+    }
   });
 }
 
