@@ -1,25 +1,22 @@
-// Configuración de WhatsApp
-const whatsappNumber = "+34 654 431 185";
-const defaultWhatsappMessage =
+// Configuración de email
+const contactEmail = "tapmolanfc@gmail.com";
+const defaultEmailSubject = "Consulta sobre tarjeta física NFC";
+const defaultEmailMessage =
   "Hola, me interesa una tarjeta física NFC personalizada. Quiero recibir más información.";
 
-const whatsappBaseUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, "")}`;
-
-function buildWhatsappUrl(message) {
-  return `${whatsappBaseUrl}?text=${encodeURIComponent(message)}`;
+function buildEmailUrl(message, subject = defaultEmailSubject) {
+  return `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
 }
 
-document.querySelectorAll(".whatsapp-link").forEach((link) => {
-  link.href = buildWhatsappUrl(defaultWhatsappMessage);
-  link.target = "_blank";
-  link.rel = "noopener noreferrer";
+document.querySelectorAll(".email-link").forEach((link) => {
+  link.href = buildEmailUrl(defaultEmailMessage);
 });
 
 // Referencias del formulario
 const form = document.querySelector("#cardForm");
 const finalPreview = document.querySelector("#finalPreview");
 const finalActions = document.querySelector("#finalActions");
-const finalWhatsappLink = document.querySelector("#finalWhatsappLink");
+const finalEmailLink = document.querySelector("#finalEmailLink");
 
 const fields = {
   customerName: document.querySelector("#customerName"),
@@ -154,7 +151,7 @@ function resetFinalPreviewState() {
   renderCardPreview({ isFinal: false });
 }
 
-function buildFinalWhatsappMessage() {
+function buildFinalEmailMessage() {
   const state = getFormState();
 
   return [
@@ -312,24 +309,27 @@ if (shareCardButton) {
   });
 }
 
-// Integración con WhatsApp después del submit
+// Integración con email después del submit
 if (form) {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 
     renderCardPreview({ isFinal: true });
 
-    const whatsappUrl = buildWhatsappUrl(buildFinalWhatsappMessage());
+    const emailUrl = buildEmailUrl(
+      buildFinalEmailMessage(),
+      `Solicitud de tarjeta NFC - ${getFieldValue("customerName") || "Nuevo diseño"}`,
+    );
 
-    if (finalWhatsappLink) {
-      finalWhatsappLink.href = whatsappUrl;
+    if (finalEmailLink) {
+      finalEmailLink.href = emailUrl;
     }
 
     if (finalActions) finalActions.hidden = false;
     finalPreview?.classList.add("is-final");
 
     finalPreview?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    window.location.href = emailUrl;
   });
 }
 

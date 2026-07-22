@@ -38,7 +38,7 @@ The page now loads only one stylesheet:
 
 To switch styles later, replace `styles/imp_style.css` with whichever version you want active, or rename files so the chosen one becomes `imp_style.css`.
 
-After publishing, replace the Open Graph image URL in `index.html` with the final absolute GitHub Pages URL for the strongest WhatsApp and LinkedIn previews.
+After publishing, replace the Open Graph image URL in `index.html` with the final absolute GitHub Pages URL for the strongest email and LinkedIn previews.
 
 ## Publish With GitHub Pages
 
