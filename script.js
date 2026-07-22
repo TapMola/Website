@@ -5,11 +5,21 @@ const defaultEmailMessage =
   "Hola, me interesa una tarjeta física NFC personalizada. Quiero recibir más información.";
 
 function buildEmailUrl(message, subject = defaultEmailSubject) {
-  return `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+  const params = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: contactEmail,
+    su: subject,
+    body: message,
+  });
+
+  return `https://mail.google.com/mail/?${params.toString()}`;
 }
 
 document.querySelectorAll(".email-link").forEach((link) => {
   link.href = buildEmailUrl(defaultEmailMessage);
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
 });
 
 // Referencias del formulario
@@ -329,7 +339,7 @@ if (form) {
     finalPreview?.classList.add("is-final");
 
     finalPreview?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.location.href = emailUrl;
+    window.open(emailUrl, "_blank", "noopener,noreferrer");
   });
 }
 
