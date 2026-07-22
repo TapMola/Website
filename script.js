@@ -5,15 +5,17 @@ const defaultEmailMessage =
   "Hola, me interesa una tarjeta física NFC personalizada. Quiero recibir más información.";
 
 function buildEmailUrl(message, subject = defaultEmailSubject) {
-  const params = new URLSearchParams({
-    view: "cm",
-    fs: "1",
-    to: contactEmail,
-    su: subject,
-    body: message,
-  });
+  const params = [
+    "fs=1",
+    "tf=cm",
+    "view=cm",
+    "source=mailto",
+    `to=${encodeURIComponent(contactEmail)}`,
+    `su=${encodeURIComponent(subject)}`,
+    `body=${encodeURIComponent(message)}`,
+  ].join("&");
 
-  return `https://mail.google.com/mail/?${params.toString()}`;
+  return `https://mail.google.com/mail/u/0/?${params}`;
 }
 
 document.querySelectorAll(".email-link").forEach((link) => {
